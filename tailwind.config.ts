@@ -57,7 +57,7 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontFamily: {
-  			sans: ['Segoe UI Local', 'system-ui', 'sans-serif'],
+  			sans: ['var(--font-segoe)', 'system-ui', 'sans-serif'],
   		},
   	}
   },
