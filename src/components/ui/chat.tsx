@@ -249,15 +249,18 @@ export default function ChatInterface() {
             <Card className="w-[606px] rounded-[22px] overflow-hidden bg-black text-white border border-zinc-800 shadow-lg shadow-white/10">
               <div className="flex flex-col h-[900px]">
                 {/* Header */}
-                <div className="flex items-center justify-between px-14 py-6 border-b border-zinc-800">
-                  <h1 className="text-2xl font-medium font-['Segoe_UI']">Talking about flicker goo...</h1>
+                <div className="flex items-center justify-between px-10 py-6 border-b border-zinc-800">
+                  <h1 className="text-2xl font-medium font-['Segoe_UI'] flex items-center gap-1">
+                    <span>Talking about TSLA earnings and</span>
+                    <span className="text-zinc-500 text-3xl font-bold leading-none ml-[-2px]">...</span>
+                  </h1>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsChatOpen(false)}
                     className="text-zinc-400"
                   >
-                    <ChevronDown className="w-8 h-8 stroke-[3] transform scale-[2]" />
+                    <ChevronDown className="w-8 h-8 stroke-[2] transform scale-[2]" />
                   </Button>
                 </div>
 
