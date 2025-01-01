@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource-variable/noto-sans": "^5.0.0",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.1",
