@@ -1,4 +1,5 @@
 import './globals.css'
+import '@fontsource-variable/noto-sans'
 
 export const metadata = {
   title: 'Spaces Chat',
@@ -12,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased font-['Noto_Sans']">{children}</body>
+      <body className="antialiased font-['Noto_Sans_Variable']">{children}</body>
     </html>
   )
 }
