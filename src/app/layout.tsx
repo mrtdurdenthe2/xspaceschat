@@ -6,6 +6,8 @@ const notoSans = Noto_Sans({
   weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
   variable: '--font-noto',
+  preload: true,
+  adjustFontFallback: true,
 })
 
 export const metadata = {
