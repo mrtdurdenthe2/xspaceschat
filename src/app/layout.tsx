@@ -4,8 +4,8 @@ import { Noto_Sans } from 'next/font/google'
 
 const notoSans = Noto_Sans({
   subsets: ['latin'],
-  display: 'block',
-  variable: '--font-noto',
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
 })
 
 const segoeUI = localFont({
@@ -61,10 +61,9 @@ const segoeUI = localFont({
       style: 'italic',
     }
   ],
-  variable: '--font-segoe',
-  display: 'block',
+  display: 'swap',
   preload: true,
-  fallback: ['var(--font-noto)', 'system-ui', 'sans-serif']
+  adjustFontFallback: 'Arial'
 })
 
 export const metadata = {
@@ -78,8 +77,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${segoeUI.variable} ${notoSans.variable}`}>
-      <body className={`${segoeUI.className} antialiased`}>{children}</body>
+    <html lang="en">
+      <body className={`${segoeUI.className} ${notoSans.className} antialiased`}>{children}</body>
     </html>
   )
 }
