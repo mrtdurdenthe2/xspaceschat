@@ -2,8 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChevronDown, Heart, MessageCircle, Mic, Users2, Smile } from 'lucide-react'
+import { ChevronDown, Heart, MessageCircle, Users2, Smile } from 'lucide-react'
 import { MicrophoneIcon } from '@heroicons/react/24/solid'
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
