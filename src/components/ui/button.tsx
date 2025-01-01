@@ -1,4 +1,5 @@
 import * as React from "react"
+import '@fontsource-variable/noto-sans'
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 

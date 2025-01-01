@@ -1,5 +1,5 @@
 import * as React from "react"
-
+import '@fontsource-variable/noto-sans'
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(

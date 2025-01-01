@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import '@fontsource-variable/noto-sans'
 
 interface Message {
   id: number
