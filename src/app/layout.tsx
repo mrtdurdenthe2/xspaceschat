@@ -1,5 +1,12 @@
 import './globals.css'
 import localFont from 'next/font/local'
+import { Noto_Sans } from 'next/font/google'
+
+const notoSans = Noto_Sans({
+  subsets: ['latin'],
+  display: 'block',
+  variable: '--font-noto',
+})
 
 const segoeUI = localFont({
   src: [
@@ -57,7 +64,7 @@ const segoeUI = localFont({
   variable: '--font-segoe',
   display: 'block',
   preload: true,
-  fallback: ['system-ui', 'sans-serif']
+  fallback: ['var(--font-noto)', 'system-ui', 'sans-serif']
 })
 
 export const metadata = {
@@ -71,8 +78,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={segoeUI.className}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={`${segoeUI.variable} ${notoSans.variable}`}>
+      <body className={`${segoeUI.className} antialiased`}>{children}</body>
     </html>
   )
 }
