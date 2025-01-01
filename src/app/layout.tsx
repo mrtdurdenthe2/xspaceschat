@@ -5,9 +5,8 @@ const notoSans = Noto_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-noto',
+  fallback: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
   preload: true,
-  adjustFontFallback: true,
 })
 
 export const metadata = {
@@ -21,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${notoSans.variable} ${notoSans.className}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en">
+      <body className={`antialiased ${notoSans.className}`}>{children}</body>
     </html>
   )
 }
