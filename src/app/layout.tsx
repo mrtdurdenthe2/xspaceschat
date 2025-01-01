@@ -1,13 +1,4 @@
 import './globals.css'
-import { Noto_Sans } from 'next/font/google'
-
-const notoSans = Noto_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-  fallback: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-  preload: true,
-})
 
 export const metadata = {
   title: 'Spaces Chat',
@@ -21,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`antialiased ${notoSans.className}`}>{children}</body>
+      <body className="antialiased font-['Noto_Sans']">{children}</body>
     </html>
   )
 }
