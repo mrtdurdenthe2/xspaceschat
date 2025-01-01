@@ -7,6 +7,7 @@ import { MicrophoneIcon } from '@heroicons/react/24/solid'
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 
 interface Message {
   id: number
@@ -230,10 +231,13 @@ export default function ChatInterface() {
     <>
       {/* Background Image */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <img
+        <Image
           src="/spacesmain_blur.png"
           alt="Background"
+          width={606}
+          height={1068}
           className="w-[606px] h-[1067.85px] object-cover rounded-[22px]"
+          priority
         />
       </div>
 
@@ -279,12 +283,12 @@ export default function ChatInterface() {
                           <span className="font-medium text-zinc-400 text-[21px] font-['Segoe_UI']">{message.user.name}</span>
                           {message.user.verified && (
                             <Badge variant="secondary" className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
-                              <img src="/verified.svg" alt="Verified" className="w-full h-full" />
+                              <Image src="/verified.svg" alt="Verified" width={22} height={22} className="w-full h-full" />
                             </Badge>
                           )}
                           {message.user.subscriber && (
                             <Badge className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
-                              <img src="/subscriber.svg" alt="Subscriber" className="w-full h-full" />
+                              <Image src="/subscriber.svg" alt="Subscriber" width={22} height={22} className="w-full h-full" />
                             </Badge>
                           )}
                         </div>
