@@ -100,8 +100,7 @@ const sampleMessages = [
   "Absolutely phenomenal content",
   "First time watching, instant follow!",
   "This made my day",
-  "This is absolutely incredible! WOW WOW WOW WOW WOW"
-
+  "This is absolutely incredible! WOW WOW WOW WOW WOW",
 ]
 
 const sampleUsers = [
@@ -141,6 +140,7 @@ export default function ChatInterface() {
   const [inputValue, setInputValue] = useState("")
   const [messageCount, setMessageCount] = useState(initialMessages.length)
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -171,7 +171,7 @@ export default function ChatInterface() {
     if (textarea) {
       textarea.style.height = '0px'
       const scrollHeight = textarea.scrollHeight
-      textarea.style.height = Math.min(Math.max(24, scrollHeight), 100) + 'px'
+      textarea.style.height = Math.min(Math.max(36, scrollHeight), 150) + 'px'
     }
   }
 
@@ -228,106 +228,135 @@ export default function ChatInterface() {
   }, [])
 
   return (
-    <div className="w-[404px] mx-auto flex flex-col gap-[10.41px] font-['Segoe_UI',_system-ui,_sans-serif]">
-      {/* Main chat card */}
-      <Card className="rounded-[14.69px] overflow-hidden bg-black text-white border border-zinc-800 shadow-lg">
-        <div className="flex flex-col h-[600px]">
-          {/* Header */}
-          <div className="flex items-center justify-between px-9 py-4 border-b border-zinc-800">
-            <h1 className="text-xl font-medium">Talking about flicker goo...</h1>
-            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-300">
-              <ChevronDown className="h-6 w-6 stroke-[3]" />
-            </Button>
-          </div>
+    <>
+      {/* Background Image */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+        <img
+          src="/spacesmain_blur.png"
+          alt="Background"
+          className="w-[606px] h-[1067.85px] object-cover rounded-[22px]"
+        />
+      </div>
 
-          {/* Messages */}
-          <div
-            ref={messagesContainerRef}
-            onScroll={handleScroll}
-            className="flex-1 overflow-y-auto px-5 space-y-[10.41px]"
-          >
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 p-3 rounded-[10px] ${
-                  message.user.subscriber ? "bg-[#2B002C] border border-[#5E005F]" : ""
-                }`}
-              >
-                <Avatar className="h-[25.4px] w-[25.4px] flex-shrink-0">
-                  <AvatarImage src={message.user.avatar} />
-                  <AvatarFallback>{message.user.name[0]}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <span className="font-medium text-zinc-400 text-[14px]">{message.user.name}</span>
-                    {message.user.verified && (
-                      <Badge variant="secondary" className="h-[15px] w-[15px] p-0 bg-transparent flex-shrink-0">
-                        <img src="/verified.svg" alt="Verified" className="w-full h-full" />
-                      </Badge>
-                    )}
-                    {message.user.subscriber && (
-                      <Badge className="h-[15px] w-[15px] p-0 bg-transparent flex-shrink-0">
-                        <img src="/subscriber.svg" alt="Subscriber" className="w-full h-full" />
-                      </Badge>
-                    )}
+      {/* Chat Interface */}
+      <div className="fixed inset-0 flex items-center justify-center font-['Segoe_UI']">
+        <div className="flex flex-col gap-6">
+          {/* Main chat card */}
+          <div className={`transition-opacity duration-200 ${isChatOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <Card className="w-[606px] rounded-[22px] overflow-hidden bg-black text-white border border-zinc-800 shadow-lg shadow-white/10">
+              <div className="flex flex-col h-[900px]">
+                {/* Header */}
+                <div className="flex items-center justify-between px-14 py-6 border-b border-zinc-800">
+                  <h1 className="text-2xl font-medium font-['Segoe_UI']">Talking about flicker goo...</h1>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsChatOpen(false)}
+                    className="text-zinc-400"
+                  >
+                    <ChevronDown className="w-8 h-8 stroke-[3] transform scale-[2]" />
+                  </Button>
+                </div>
+
+                {/* Messages */}
+                <div
+                  ref={messagesContainerRef}
+                  onScroll={handleScroll}
+                  className="flex-1 overflow-y-auto px-8 space-y-4 font-['Segoe_UI']"
+                >
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex gap-3 p-5 rounded-[15px] ${
+                        message.user.subscriber ? "bg-[#2B002C] border border-[#5E005F]" : ""
+                      }`}
+                    >
+                      <Avatar className="h-[38.1px] w-[38.1px] flex-shrink-0">
+                        <AvatarImage src={message.user.avatar} />
+                        <AvatarFallback>{message.user.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-zinc-400 text-[21px] font-['Segoe_UI']">{message.user.name}</span>
+                          {message.user.verified && (
+                            <Badge variant="secondary" className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
+                              <img src="/verified.svg" alt="Verified" className="w-full h-full" />
+                            </Badge>
+                          )}
+                          {message.user.subscriber && (
+                            <Badge className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
+                              <img src="/subscriber.svg" alt="Subscriber" className="w-full h-full" />
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-white mt-2 text-[21px] leading-[25.5px] whitespace-pre-wrap break-words font-['Segoe_UI']">{message.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input area */}
+                <div className="min-h-[139.5px] px-10 py-8 flex items-start gap-4 border-t border-[#1D1D1D]">
+                  <div className="flex-1 bg-[#181818] rounded-[37.5px] min-h-[73px] border border-gradient-to-br from-[#494949] to-[#AFAFAF] flex items-center px-7">
+                    <textarea
+                      ref={textareaRef}
+                      value={inputValue}
+                      onChange={(e) => {
+                        setInputValue(e.target.value)
+                        adjustTextareaHeight()
+                      }}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Send a message"
+                      className="bg-transparent text-white placeholder-zinc-500 flex-1 outline-none resize-none py-4 min-h-[36px] max-h-[150px] overflow-y-auto block w-full text-[21px] font-['Segoe_UI']"
+                      style={{ height: '36px' }}
+                      rows={1}
+                    />
                   </div>
-                  <p className="text-white mt-1 text-[14px] leading-[17px] whitespace-pre-wrap break-words">{message.content}</p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-zinc-400 w-[33px] h-[33px] mt-4 scale-[1.8] hover:bg-slate"
+                  >
+                    <Smile className="h-[24.8px] w-[24.8px] stroke-[1.84]" />
+                  </Button>
                 </div>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
+            </Card>
           </div>
 
-          {/* Input area */}
-          <div className="min-h-[93.03px] px-[27.32px] py-[22.17px] flex items-start gap-[9.02px] border-t border-[#1D1D1D]">
-            <div className="flex-1 bg-[#181818] rounded-[25px] min-h-[48.7px] border border-gradient-to-br from-[#494949] to-[#AFAFAF] flex items-center px-[18.36px]">
-              <textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value)
-                  adjustTextareaHeight()
-                }}
-                onKeyDown={handleKeyDown}
-                placeholder="Send a message"
-                className="bg-transparent text-white placeholder-zinc-500 flex-1 outline-none resize-none py-3 min-h-[24px] max-h-[100px] overflow-y-auto block w-full"
-                style={{ height: '24px' }}
-                rows={1}
-              />
+          {/* Toolbar Card */}
+          <Card className="w-[606px] rounded-[22px] bg-black border border-zinc-800 shadow-lg shadow-white/10">
+            <div className="px-9 py-8">
+              <div className="flex justify-between items-center">
+                <Button variant="outline" size="icon" className="w-[90px] h-[90px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                  <MicrophoneIcon className="w-8 h-8 fill-[#794BFA] transform scale-[2]" aria-hidden="true" />
+                </Button>
+                <div className="flex items-center gap-4">
+                  <Button variant="outline" size="icon" className="w-[57px] h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                    <Users2 className="w-4 h-4 text-white transform scale-[1.4]" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="w-[57px] h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                    <Heart className="w-4 h-4 text-white transform scale-[1.4]" />
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={() => setIsChatOpen(!isChatOpen)}
+                    className={`h-[60px] rounded-full px-6 flex items-center gap-2 transition-colors font-['Segoe_UI'] ${
+                      isChatOpen
+                        ? "bg-white text-black hover:bg-zinc-200"
+                        : "bg-black text-white border border-[#536B71] hover:bg-zinc-900"
+                    }`}
+                  >
+                    <MessageCircle className="h-[32px] w-[32px]" />
+                    <span className="text-[24px]">{messageCount}</span>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-zinc-400 hover:text-zinc-300 w-[22.04px] h-[22.04px] mt-3"
-            >
-              <Smile className="h-[16.53px] w-[16.53px] stroke-[1.84]" />
-            </Button>
-          </div>
+          </Card>
         </div>
-      </Card>
-
-      {/* Toolbar Card */}
-      <Card className="rounded-[14.69px] bg-black border border-zinc-800 shadow-lg">
-        <div className="px-[23.45px] py-[21.64px]">
-          <div className="flex justify-between items-center">
-            <Button variant="outline" size="icon" className="w-[52.3px] h-[52.3px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-              <MicrophoneIcon className="h-[32px] w-[32px] fill-[#794BFA]" />
-            </Button>
-            <div className="flex items-center gap-[11.72px]">
-              <Button variant="outline" size="icon" className="w-[37.88px] h-[36.97px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-                <Users2 className="h-[21.64px] w-[20.74px] text-white" />
-              </Button>
-              <Button variant="outline" size="icon" className="w-[37.88px] h-[37.88px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-                <Heart className="h-[21.64px] w-[21.64px] text-white" />
-              </Button>
-              <Button variant="default" className="h-[40.23px] rounded-full bg-white text-black hover:bg-zinc-200 px-[17.13px] flex items-center gap-[6.31px]">
-                <MessageCircle className="h-[21.64px] w-[21.64px]" />
-                <span className="text-[16px]">{messageCount}</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </div>
+      </div>
+    </>
   )
 }
