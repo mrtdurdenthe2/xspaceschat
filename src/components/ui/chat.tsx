@@ -169,11 +169,37 @@ export default function ChatInterface() {
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
     if (textarea) {
-      textarea.style.height = '0px'
+      // Check if we're on mobile based on window width
+      const isMobile = window.innerWidth < 768 // md breakpoint in Tailwind
+      const baseHeight = isMobile ? 50 : 73
+      const maxHeight = isMobile ? 100 : 150
+
+      textarea.style.height = `${baseHeight}px`
       const scrollHeight = textarea.scrollHeight
-      textarea.style.height = Math.min(Math.max(36, scrollHeight), 150) + 'px'
+      textarea.style.height = `${Math.min(Math.max(baseHeight, scrollHeight), maxHeight)}px`
     }
   }
+
+  // Add resize listener
+  useEffect(() => {
+    const handleResize = () => {
+      adjustTextareaHeight()
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    // Reset textarea height when input value is empty
+    if (inputValue === '') {
+      const textarea = textareaRef.current
+      if (textarea) {
+        const isMobile = window.innerWidth < 768
+        textarea.style.height = isMobile ? '50px' : '73px'
+      }
+    }
+  }, [inputValue])
 
   const sendMessage = () => {
     if (inputValue.trim()) {
@@ -192,7 +218,6 @@ export default function ChatInterface() {
       setMessages(prev => [...prev, newMessage])
       setMessageCount(prev => prev + 1)
       setInputValue("")
-      textareaRef.current!.style.height = '24px'
     }
   }
 
@@ -229,30 +254,18 @@ export default function ChatInterface() {
 
   return (
     <>
-      {/* Background Image */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <Image
-          src="/spacesmain_blur.png"
-          alt="Background"
-          width={606}
-          height={1068}
-          className="w-[606px] h-[1067.85px] object-cover rounded-[22px]"
-          priority
-        />
-      </div>
-
       {/* Chat Interface */}
       <div className="fixed inset-0 flex items-center justify-center font-['Segoe_UI']">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:gap-6">
           {/* Main chat card */}
           <div className={`transition-opacity duration-200 ${isChatOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-            <Card className="w-[606px] rounded-[22px] overflow-hidden bg-black text-white border border-zinc-800 shadow-lg shadow-white/10">
-              <div className="flex flex-col h-[900px]">
+            <Card className="w-[400px] md:w-[606px] rounded-[18px] md:rounded-[22px] overflow-hidden bg-black text-white border border-zinc-800 shadow-lg shadow-white/10">
+              <div className="flex flex-col h-[600px] md:h-[900px]">
                 {/* Header */}
-                <div className="flex items-center justify-between px-10 py-6 border-b border-zinc-800">
-                  <h1 className="text-2xl font-medium font-['Segoe_UI'] flex items-center gap-1">
+                <div className="flex items-center justify-between px-7 md:px-10 py-5 md:py-6 border-b border-zinc-800">
+                  <h1 className="text-2xl md:text-2xl font-medium font-['Segoe_UI'] flex items-center gap-1">
                     <span>Talking about TSLA earnings and</span>
-                    <span className="text-zinc-500 text-3xl font-bold leading-none ml-[-2px]">...</span>
+                    <span className="text-zinc-500 text-2xl md:text-3xl font-bold leading-none ml-[-2px]">...</span>
                   </h1>
                   <Button
                     variant="ghost"
@@ -260,7 +273,7 @@ export default function ChatInterface() {
                     onClick={() => setIsChatOpen(false)}
                     className="text-zinc-400"
                   >
-                    <ChevronDown className="w-8 h-8 stroke-[2] transform scale-[2]" />
+                    <ChevronDown className="w-6 h-6 md:w-8 md:h-8 stroke-[2] transform scale-[2]" />
                   </Button>
                 </div>
 
@@ -268,34 +281,36 @@ export default function ChatInterface() {
                 <div
                   ref={messagesContainerRef}
                   onScroll={handleScroll}
-                  className="flex-1 overflow-y-auto px-8 space-y-4 font-['Segoe_UI']"
+                  className="flex-1 overflow-y-auto px-6 md:px-8 space-y-3 md:space-y-4 font-['Segoe_UI']"
                 >
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex gap-3 p-5 rounded-[15px] ${
+                      className={`flex gap-2 md:gap-3 p-4 md:p-5 rounded-[12px] md:rounded-[15px] ${
                         message.user.subscriber ? "bg-[#2B002C] border border-[#5E005F]" : ""
                       }`}
                     >
-                      <Avatar className="h-[38.1px] w-[38.1px] flex-shrink-0">
+                      <Avatar className="h-[30px] w-[30px] md:h-[38.1px] md:w-[38.1px] flex-shrink-0">
                         <AvatarImage src={message.user.avatar} />
                         <AvatarFallback>{message.user.name[0]}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-zinc-400 text-[21px] font-['Segoe_UI']">{message.user.name}</span>
+                        <div className="flex items-center gap-1.5 md:gap-2">
+                          <span className="font-medium text-zinc-400 text-[16px] md:text-[21px] font-['Segoe_UI']">{message.user.name}</span>
                           {message.user.verified && (
-                            <Badge variant="secondary" className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
-                              <Image src="/verified.svg" alt="Verified" width={22} height={22} className="w-full h-full" />
+                            <Badge variant="secondary" className="h-[18px] w-[18px] md:h-[22.5px] md:w-[22.5px] p-0 bg-transparent flex-shrink-0">
+                              <Image src="/verified.svg" alt="Verified" width={18} height={18} className="w-full h-full md:hidden" />
+                              <Image src="/verified.svg" alt="Verified" width={22} height={22} className="w-full h-full hidden md:block" />
                             </Badge>
                           )}
                           {message.user.subscriber && (
-                            <Badge className="h-[22.5px] w-[22.5px] p-0 bg-transparent flex-shrink-0">
-                              <Image src="/subscriber.svg" alt="Subscriber" width={22} height={22} className="w-full h-full" />
+                            <Badge className="h-[18px] w-[18px] md:h-[22.5px] md:w-[22.5px] p-0 bg-transparent flex-shrink-0">
+                              <Image src="/subscriber.svg" alt="Subscriber" width={18} height={18} className="w-full h-full md:hidden" />
+                              <Image src="/subscriber.svg" alt="Subscriber" width={22} height={22} className="w-full h-full hidden md:block" />
                             </Badge>
                           )}
                         </div>
-                        <p className="text-white mt-2 text-[21px] leading-[25.5px] whitespace-pre-wrap break-words font-['Segoe_UI']">{message.content}</p>
+                        <p className="text-white mt-1.5 md:mt-2 text-[16px] md:text-[21px] leading-[20px] md:leading-[25.5px] whitespace-pre-wrap break-words font-['Segoe_UI']">{message.content}</p>
                       </div>
                     </div>
                   ))}
@@ -303,8 +318,8 @@ export default function ChatInterface() {
                 </div>
 
                 {/* Input area */}
-                <div className="min-h-[139.5px] px-10 py-8 flex items-start gap-4 border-t border-[#1D1D1D]">
-                  <div className="flex-1 bg-[#181818] rounded-[37.5px] min-h-[73px] border border-gradient-to-br from-[#494949] to-[#AFAFAF] flex items-center px-7">
+                <div className="min-h-[100px] md:min-h-[139.5px] px-7 md:px-10 py-6 md:py-8 flex items-center gap-3 md:gap-4 border-t border-[#1D1D1D]">
+                  <div className="flex-1 bg-[#181818] rounded-[25px] md:rounded-[37.5px] min-h-[50px] md:min-h-[73px] border border-gradient-to-br from-[#494949] to-[#AFAFAF] flex items-center px-5 md:px-7">
                     <textarea
                       ref={textareaRef}
                       value={inputValue}
@@ -314,17 +329,17 @@ export default function ChatInterface() {
                       }}
                       onKeyDown={handleKeyDown}
                       placeholder="Send a message"
-                      className="bg-transparent text-white placeholder-zinc-500 flex-1 outline-none resize-none py-4 min-h-[36px] max-h-[150px] overflow-y-auto block w-full text-[21px] font-['Segoe_UI']"
-                      style={{ height: '36px' }}
+                      className="bg-transparent text-white placeholder-zinc-500 flex-1 outline-none resize-none py-4 md:py-6 min-h-[50px] md:min-h-[73px] max-h-[100px] md:max-h-[150px] block w-full text-[16px] md:text-[21px] font-['Segoe_UI'] leading-[1.2] align-middle"
+                      style={{ height: '50px' }}
                       rows={1}
                     />
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-zinc-400 w-[33px] h-[33px] mt-4 scale-[1.8] hover:bg-slate"
+                    className="text-zinc-400 w-[25px] h-[25px] md:w-[33px] md:h-[33px] self-center scale-[1.8] hover:bg-slate"
                   >
-                    <Smile className="h-[24.8px] w-[24.8px] stroke-[1.84]" />
+                    <Smile className="h-[18px] w-[18px] md:h-[24.8px] md:w-[24.8px] stroke-[1.84]" />
                   </Button>
                 </div>
               </div>
@@ -332,30 +347,30 @@ export default function ChatInterface() {
           </div>
 
           {/* Toolbar Card */}
-          <Card className="w-[606px] rounded-[22px] bg-black border border-zinc-800 shadow-lg shadow-white/10">
-            <div className="px-9 py-8">
+          <Card className="w-[400px] md:w-[606px] rounded-[18px] md:rounded-[22px] bg-black border border-zinc-800 shadow-lg shadow-white/10">
+            <div className="px-7 md:px-9 py-6 md:py-8">
               <div className="flex justify-between items-center">
-                <Button variant="outline" size="icon" className="w-[90px] h-[90px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-                  <MicrophoneIcon className="w-8 h-8 fill-[#794BFA] transform scale-[2]" aria-hidden="true" />
+                <Button variant="outline" size="icon" className="w-[65px] h-[65px] md:w-[90px] md:h-[90px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                  <MicrophoneIcon className="w-6 h-6 md:w-8 md:h-8 fill-[#794BFA] transform scale-[2]" aria-hidden="true" />
                 </Button>
-                <div className="flex items-center gap-4">
-                  <Button variant="outline" size="icon" className="w-[57px] h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-                    <Users2 className="w-4 h-4 text-white transform scale-[1.4]" />
+                <div className="flex items-center gap-3 md:gap-4">
+                  <Button variant="outline" size="icon" className="w-[40px] h-[40px] md:w-[57px] md:h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                    <Users2 className="w-3 h-3 md:w-4 md:h-4 text-white transform scale-[1.4]" />
                   </Button>
-                  <Button variant="outline" size="icon" className="w-[57px] h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
-                    <Heart className="w-4 h-4 text-white transform scale-[1.4]" />
+                  <Button variant="outline" size="icon" className="w-[40px] h-[40px] md:w-[57px] md:h-[57px] rounded-full border-[#536B71] bg-black hover:bg-zinc-900">
+                    <Heart className="w-3 h-3 md:w-4 md:h-4 text-white transform scale-[1.4]" />
                   </Button>
                   <Button
                     variant="default"
                     onClick={() => setIsChatOpen(!isChatOpen)}
-                    className={`h-[60px] rounded-full px-6 flex items-center gap-2 transition-colors font-['Segoe_UI'] ${
+                    className={`h-[40px] md:h-[60px] rounded-full px-4 md:px-6 flex items-center gap-2 transition-colors font-['Segoe_UI'] ${
                       isChatOpen
                         ? "bg-white text-black hover:bg-zinc-200"
                         : "bg-black text-white border border-[#536B71] hover:bg-zinc-900"
                     }`}
                   >
-                    <MessageCircle className="h-[32px] w-[32px]" />
-                    <span className="text-[24px]">{messageCount}</span>
+                    <MessageCircle className="h-[24px] w-[24px] md:h-[32px] md:w-[32px]" />
+                    <span className="text-[18px] md:text-[24px]">{messageCount}</span>
                   </Button>
                 </div>
               </div>
